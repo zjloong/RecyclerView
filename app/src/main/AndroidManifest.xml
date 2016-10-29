@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.heihei.hehe.recyclerview_demo">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".divider.LinearManagerActivity" />
+        <activity android:name=".divider.GridManagerActivity" />
+        <activity android:name=".divider.StickyActivity" />
+        <activity android:name=".spansize.SpanSizeActivity" />
+        <activity android:name=".spansize.RefreshActivity" />
+        <activity android:name=".drag.DragActivity"/>
+        <activity android:name=".drag.SwipeActivity"/>
+    </application>
+
+</manifest>

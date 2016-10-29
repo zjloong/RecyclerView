@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="StickyRecyclerView">
+        <attr name="dividerHeight" format="dimension" />
+        <attr name="titleHeight" format="dimension" />
+        <attr name="dividerColor" format="color" />
+        <attr name="titleColor" format="color" />
+        <attr name="titleTextColor" format="color" />
+    </declare-styleable>
+
+</resources>
