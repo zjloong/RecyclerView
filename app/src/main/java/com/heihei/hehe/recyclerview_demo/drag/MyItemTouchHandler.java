@@ -31,7 +31,7 @@ public class MyItemTouchHandler extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         // 指定可 拖拽方向 和 滑动消失的方向
-        int dragFlags,swipeFlags;
+        int dragFlags, swipeFlags;
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
         if (manager instanceof GridLayoutManager || manager instanceof StaggeredGridLayoutManager) {
             // 上下左右都可以拖动
@@ -53,11 +53,19 @@ public class MyItemTouchHandler extends ItemTouchHelper.Callback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // 相同 viewType 之间才能拖动交换
         if (viewHolder.getItemViewType() == target.getItemViewType()) {
-
-            // 删除数据
-            adapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
-            // adapter 刷新
-            adapter.notifyItemMoved(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            if (fromPosition < toPosition) {
+                //途中所有的item位置都要移动
+                for (int i = fromPosition; i < toPosition; i++) {
+                    adapter.onItemMove(i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    adapter.onItemMove(i, i - 1);
+                }
+            }
+            adapter.notifyItemMoved(fromPosition, toPosition);
             return true;
         }
         return false;
@@ -78,9 +86,9 @@ public class MyItemTouchHandler extends ItemTouchHelper.Callback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             //滑动时改变Item的透明度
-            final float alpha = 1 - Math.abs(dX) / (float)viewHolder.itemView.getWidth();
+            final float alpha = 1 - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
         }
@@ -95,7 +103,7 @@ public class MyItemTouchHandler extends ItemTouchHelper.Callback {
         if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
             // 拖拽状态
             viewHolder.itemView.setBackgroundColor(Color.BLUE);
-        }else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // 滑动删除状态
             viewHolder.itemView.setBackgroundColor(Color.RED);
         }
@@ -131,18 +139,19 @@ public class MyItemTouchHandler extends ItemTouchHelper.Callback {
     }
 
     // 建议让 adapter 实现该接口
-    public static abstract class ItemTouchAdapterImpl extends RecyclerView.Adapter{
+    public static abstract class ItemTouchAdapterImpl extends RecyclerView.Adapter {
 
         public abstract void onItemMove(int fromPosition, int toPosition);
+
         public abstract void onItemRemove(int position);
 
         // 是否自动开启拖拽
-        protected boolean autoOpenDrag(){
+        protected boolean autoOpenDrag() {
             return true;
         }
 
         // 是否自动开启滑动删除
-        protected boolean autoOpenSwipe(){
+        protected boolean autoOpenSwipe() {
             return true;
         }
     }
